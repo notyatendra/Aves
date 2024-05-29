@@ -1,30 +1,24 @@
 package com.yatendra.project.bird.bird_api.controller;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-// import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yatendra.project.bird.bird_api.entity.Bird;
-import com.yatendra.project.bird.bird_api.repos.BirdRepository;
+import com.yatendra.project.bird.bird_api.service.BirdService;
 
 @RestController
 public class BirdController {
 
     @Autowired
-    BirdRepository repo;
+    private BirdService service;
 
     // @RequestMapping("/index")
     // public String homePage() {
@@ -33,28 +27,22 @@ public class BirdController {
 
     @PostMapping("/birds")
     public void addBird(@RequestBody Bird bird) {
-
-        String formatDate = ZonedDateTime.now(ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
-        bird.setAdded(formatDate);
-
-        if(bird.getVisible() == null) bird.setVisible(false);
-        repo.save(bird);
-
+        service.createBird(bird);
     }
 
     @GetMapping("/birds")
     public List<Bird> getBrids() {
-        return repo.findAll();
+        return service.readBirds();
     }
 
     @GetMapping("/birds/{id}")
-    public Bird getBirds(@PathVariable("id") Long id) {
-        return repo.findById(id).get();
+    public Bird getBird(@PathVariable("id") Long id) {
+        return service.readBird(id);
     }
 
     @RequestMapping(value = "/birds/{id}", method = RequestMethod.DELETE)
     public void deleteBird(@PathVariable("id") Long id) {
-        repo.deleteById(id);
+        service.deleteBird(id);
     }
 
 }
