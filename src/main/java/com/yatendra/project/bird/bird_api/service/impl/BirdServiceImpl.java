@@ -6,9 +6,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.yatendra.project.bird.bird_api.entity.Bird;
+import com.yatendra.project.bird.bird_api.exception.BadRequestException;
 import com.yatendra.project.bird.bird_api.repos.BirdRepository;
 import com.yatendra.project.bird.bird_api.service.BirdService;
 
@@ -20,6 +22,10 @@ public class BirdServiceImpl implements BirdService {
 
     @Override
     public void createBird(Bird bird) {
+
+        if(bird.getName() == null) {
+            throw new BadRequestException("please provide the name of the bird");
+        }
         
         String formatDate = ZonedDateTime.now(ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
         bird.setAdded(formatDate);
@@ -35,7 +41,7 @@ public class BirdServiceImpl implements BirdService {
 
     @Override
     public Bird readBird(Long id) {
-        return repo.findById(id).get();
+        return repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Bird not found with id : " + id));
     }
 
     @Override
