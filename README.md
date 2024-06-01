@@ -1,4 +1,4 @@
-Hi, This is a simple implementation of creating an api which is capable of CURD operations. Specifically for the application, I have implemented delete, create and read operation as it was only required. 
+Hi, This is a simple implementation of creating an api which is capable of CRUD operations. Specifically for the application, I have implemented delete, create and read operation as it was only required. 
 
 The basic entity used in the applicaition is Bird. The structure of which can be seen below:
 
