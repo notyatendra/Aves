@@ -41,11 +41,13 @@ public class BirdServiceImpl implements BirdService {
 
     @Override
     public Bird readBird(Long id) {
-        return repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Bird not found with id : " + id));
+        if(!repo.existsById(id)) throw new ResourceNotFoundException("Bird not found with id : " + id);
+        return repo.findById(id).get();
     }
 
     @Override
     public void deleteBird(Long id) {
+        if(!repo.existsById(id)) throw new ResourceNotFoundException("Bird with id " + id + " does not exists");
         repo.deleteById(id);
     }
 
